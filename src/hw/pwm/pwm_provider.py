@@ -11,7 +11,7 @@ Class definition to abstract PWM generation
 
 import logging
 
-class PWM_Provider(object):
+class PWMProvider(object):
     def __init__(self, min_freq, max_freq, min_duty=0, max_duty=100):
         """Create a PWM provider"""
         self.__logger = logging.getLogger('hw.pwm.pwm-provider')

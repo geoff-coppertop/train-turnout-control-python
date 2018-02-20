@@ -11,8 +11,8 @@
 import logging
 import pytest
 
-from fake_pca9685 import Fake_PCA9685
-from src.hw.pwm.pwm_provider_pca9685 import PWM_Provider_PCA9685
+from fake_pca9685 import FakePCA9685
+from src.hw.pwm.pwm_provider_pca9685 import PWMProviderPCA9685
 
 #-------------------------------------------------------------------------------
 # Test fixtures
@@ -20,19 +20,19 @@ from src.hw.pwm.pwm_provider_pca9685 import PWM_Provider_PCA9685
 @pytest.fixture()
 def device():
     """Creates a fake PCA9685 to be used during the test"""
-    return Fake_PCA9685()
+    return FakePCA9685()
 
 @pytest.fixture
 def pwm_provider(device):
     """Creates a PCA9685 pwm provider for testing"""
-    return PWM_Provider_PCA9685(device, 0)
+    return PWMProviderPCA9685(device, 0)
 
 #-------------------------------------------------------------------------------
 # Init tests
 #-------------------------------------------------------------------------------
 def test_init_pwm(device):
     """Test that normal creation sets freq and duty to 0"""
-    PWM_Provider_PCA9685(device, 0)
+    PWMProviderPCA9685(device, 0)
     assert(device.get_pwm()==0)
     assert(device.get_pwm_frequency()==0)
 
@@ -40,12 +40,12 @@ def test_init_pwm(device):
 def test_init_pwm_invalid_pin_low(device):
     """Test pwm provider creation with an invalid low pin"""
     with pytest.raises(AssertionError):
-        PWM_Provider_PCA9685(device, -20)
+        PWMProviderPCA9685(device, -20)
 
 def test_init_pwm_invalid_pin_high(device):
     """Test pwm provider creation with an invalid high pin"""
     with pytest.raises(AssertionError):
-        PWM_Provider_PCA9685(device, 20)
+        PWMProviderPCA9685(device, 20)
 
 #-------------------------------------------------------------------------------
 # Duty cycle tests

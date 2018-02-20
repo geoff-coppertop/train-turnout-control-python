@@ -10,9 +10,9 @@
 
 import logging
 
-from pwm_provider import PWM_Provider
+from pwm_provider import PWMProvider
 
-class PWM_Provider_PCA9685(PWM_Provider):
+class PWMProviderPCA9685(PWMProvider):
     """Concrete definition of a PWM provider that use the PCA9685"""
 
     MIN_FREQ = 24
@@ -36,7 +36,7 @@ class PWM_Provider_PCA9685(PWM_Provider):
         assert(self.__pin >= self.MIN_PIN)
         assert(self.__pin <= self.MAX_PIN)
 
-        super(PWM_Provider_PCA9685, self).__init__(self.MIN_FREQ, self.MAX_FREQ)
+        super(PWMProviderPCA9685, self).__init__(self.MIN_FREQ, self.MAX_FREQ)
 
     def set_duty(self, duty):
         """Sets the duty cycle of the pin specified by the PWM provider.
@@ -57,7 +57,7 @@ class PWM_Provider_PCA9685(PWM_Provider):
 
         self.__logger.info('Scaled duty: %d', duty)
 
-        PWM_Provider.set_duty(self, duty)
+        PWMProvider.set_duty(self, duty)
 
     def set_freq(self, freq):
         """Set PWM frequency for the PWM provider.
