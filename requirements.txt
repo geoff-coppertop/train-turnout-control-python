@@ -1,3 +1,5 @@
 PCA9685-driver>=1.2.0; sys_platform == 'linux'
-pytest>=3.4.0
-pytest-sugar>=0.9.1
+codecov==2.0.15
+pytest==3.4.0
+pytest-sugar==0.9.1
+pytest-cov==2.5.1
