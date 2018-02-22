@@ -7,3 +7,5 @@
 [![BCH compliance](https://bettercodehub.com/edge/badge/geoff-coppertop/train-turnout-control-python?branch=master)](https://bettercodehub.com/)
 
 Program that controls multiple turnouts, including frog control.
+
+Uses TCP service control
