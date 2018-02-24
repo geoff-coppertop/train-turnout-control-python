@@ -97,6 +97,12 @@ def test_set_freq_in_range(pwm_provider, device):
     pwm_provider.set_freq(50)
     assert(device.get_pwm_frequency()==50)
 
+def test_set_same_freq_in_range(pwm_provider, device):
+    """Set the device to a valid frequency"""
+    pwm_provider.set_freq(50)
+    pwm_provider.set_freq(50)
+    assert(device.get_pwm_frequency()==50)
+
 # TODO: These next two tests can probably be parameterized
 def test_set_freq_out_range_low(pwm_provider, device):
     """Set the device to an invalid low frequency"""
