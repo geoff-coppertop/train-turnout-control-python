@@ -11,7 +11,7 @@
 import logging
 import pytest
 
-from src.hw.turnout import Turnout
+from src.hw.turnout_efrog_servo import TurnoutEFrogServo
 
 from tests.hw.fake_servo import FakeServo
 from tests.hw.fake_gpo_provider import FakeGPOProvider
@@ -38,7 +38,7 @@ def gpo_provider():
 @pytest.fixture
 def turnout_main(servo, gpo_provider):
     """Create a turnout set to the diverging route"""
-    turnout = Turnout(servo, gpo_provider, ANGLE_MAIN, ANGLE_DIV)
+    turnout = TurnoutEFrogServo(servo, gpo_provider, ANGLE_MAIN, ANGLE_DIV)
 
     # Check that the route was set to the diverging route
     assert(servo.get_angle() == ANGLE_MAIN)
@@ -63,7 +63,7 @@ def turnout_div(turnout_main, servo, gpo_provider):
 def test_init_bad_angle(servo, gpo_provider):
     """Chech that turnout init fails on bad limit angle"""
     with pytest.raises(AssertionError):
-        Turnout(servo, gpo_provider, -45, ANGLE_DIV)
+        TurnoutEFrogServo(servo, gpo_provider, -45, ANGLE_DIV)
 
 #-------------------------------------------------------------------------------
 # Route tests
