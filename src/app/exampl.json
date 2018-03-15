@@ -1,0 +1,35 @@
+{
+    "connection":
+        {
+        
+        },
+    "turnouts":
+        [
+            {
+                "id":                   "",
+                "servo": {
+                    "devID":            "0x40",
+                    "pin":              12,
+                    "angleMain":        "35",
+                    "angleDiverging":   "130"
+                },
+                "frog": {
+                    "devID":            "0x40",
+                    "pin":              13
+                }
+            },
+            {
+                "id":                   "",
+                "servo": {
+                    "devID":            "0x40",
+                    "pin":              12,
+                    "angleMain":        "35",
+                    "angleDiverging":   "130"
+                },
+                "frog": {
+                    "devID":            "0x40",
+                    "pin":              13
+                }
+            },
+        ]
+}
