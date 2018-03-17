@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #-------------------------------------------------------------------------------
-# turnout_efrog_servo.py
+# turnout.py
 #
 # G. Thomas
 # 2018
@@ -12,9 +12,8 @@ import logging
 
 from gpio.gpo_provider import GPOProvider
 from pwm.pwm_provider import PWMProvider
-from src.hw.turnout import Turnout
 
-class TurnoutEFrogServo(Turnout):
+class TurnoutEFrogServo(object):
     """Object for controlling an electro frog Turnout"""
 
     def __init__(self, servo, gpo_provider, main_angle, diverging_angle):
