@@ -10,7 +10,7 @@
 
 import logging
 
-from pwm_provider import PWMProvider
+from src.hw.pwm.pwm_provider import PWMProvider
 
 class PWMProviderPCA9685(PWMProvider):
     """Concrete definition of a PWM provider that use the PCA9685"""

@@ -9,7 +9,8 @@
 #-------------------------------------------------------------------------------
 
 import logging
-from gpo_provider import GPOProvider
+
+from src.hw.gpio.gpo_provider import GPOProvider
 
 class GPOProviderPWM(GPOProvider):
     """Concreate implementation of a GPO provider that uses a PWM provider
