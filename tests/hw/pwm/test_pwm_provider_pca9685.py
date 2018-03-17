@@ -11,7 +11,7 @@
 import logging
 import pytest
 
-from fake_pca9685 import FakePCA9685
+from tests.hw.pwm.fake_pca9685 import FakePCA9685
 from src.hw.pwm.pwm_provider_pca9685 import PWMProviderPCA9685
 
 #-------------------------------------------------------------------------------

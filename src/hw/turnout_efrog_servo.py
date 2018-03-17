@@ -10,9 +10,6 @@
 
 import logging
 
-from gpio.gpo_provider import GPOProvider
-from pwm.pwm_provider import PWMProvider
-
 class TurnoutEFrogServo(object):
     """Object for controlling an electro frog Turnout"""
 

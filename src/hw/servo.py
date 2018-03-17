@@ -11,8 +11,6 @@
 import logging
 import time
 
-from pwm import pwm_provider
-
 class Servo(object):
     """Servo object that is able to go to a given angle using a PWM source"""
 
