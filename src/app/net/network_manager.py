@@ -33,7 +33,7 @@ class NetworkManager(Machine):
 
         if randomize_timeout:
             self.discovery_timeout = random.randint(
-                int(discovery_timeout * NetworkManager.DISCOVERY_TIMEOUT_RAND_FACTOR),
+                int(discovery_timeout * (1 - NetworkManager.DISCOVERY_TIMEOUT_RAND_FACTOR)),
                 int(discovery_timeout * (1 + NetworkManager.DISCOVERY_TIMEOUT_RAND_FACTOR)))
         else:
             self.discovery_timeout = discovery_timeout
@@ -72,9 +72,18 @@ class NetworkManager(Machine):
 
         self.__role = 'client'
 
-        self.__endpoints = endpoints
+        if type(endpoints) is not list:
+            self.__endpoints = [endpoints]
+        else:
+            self.__endpoints = endpoints
+
+        self.__endpoints = [endp for endp in self.__endpoints if endp is not None]
+
+        if not len(self.__endpoints):
+            raise AttributeError('No endpoints specified')
 
     def send(self, data, length):
+        """Send data using active role"""
         if self.state is not 'connected':
             raise SystemError('System must be connected to send data')
 
@@ -83,7 +92,7 @@ class NetworkManager(Machine):
         self.__get_role().send(data, length)
 
     def _stop(self):
-        # Stop all roles
+        """Stop all roles"""
         for role in self.__roles:
             role_to_stop = self.__roles[role]
 
@@ -91,19 +100,19 @@ class NetworkManager(Machine):
                 role_to_stop.stop()
 
     def _start_client(self):
+        """Start the client role"""
         self.__start_role('client')
 
     def _start_server(self):
+        """Start the server role if available"""
         if self.__roles['server'] is not None:
             self.__start_role('server')
         else:
             raise RuntimeError('No server to start')
 
-    def __get_role(self, role=None):
-        if role is None:
-            role = self.__role
-
-        return self.__roles[role]
+    def __get_role(self):
+        """Get the current role"""
+        return self.__roles[self.__role]
 
     def __start_role(self, new_role):
         """Start a given role"""
@@ -119,8 +128,7 @@ class NetworkManager(Machine):
         self.__get_role().start(self.connected, self.disconnected, self.__data_rx)
 
     def __data_rx(self, data, length):
-        """
-        """
+        """Call all endpoints with received data"""
         for endpoint in self.__endpoints:
             endpoint(data, length)
 
