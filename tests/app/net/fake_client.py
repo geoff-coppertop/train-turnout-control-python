@@ -18,13 +18,16 @@ class FakeClient(object):
         """
         """
         self.__logger = logging.getLogger('fake_client')
+
         self.__is_running = False
 
-    def start(self, connected_cb, disconnected_cb):
+    def start(self, connected_cb, disconnected_cb, data_rx_cb):
         self.__logger.debug('Starting client')
 
         self.connected = connected_cb
         self.disconnected = disconnected_cb
+
+        self.__data_rx_cb = data_rx_cb
 
         self.__is_running = True
 
@@ -36,6 +39,7 @@ class FakeClient(object):
     def is_running(self):
         return self.__is_running
 
-    def send(self, data):
-        self.__logger.debug('Discarding data')
+    def send(self, data, length):
+        self.__logger.debug('Sending data back')
 
+        self.__data_rx_cb(data, length)

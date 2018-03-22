@@ -9,10 +9,8 @@
 #-------------------------------------------------------------------------------
 
 import logging
-import socket
-import uuid
+import random
 
-from time import sleep
 from transitions.extensions import LockedMachine as Machine
 from transitions.extensions.states import add_state_features, Timeout
 
@@ -20,33 +18,47 @@ from transitions.extensions.states import add_state_features, Timeout
 class NetworkManager(Machine):
     """Object for managing network resources for the node"""
 
-    DISCOVERY_TIMEOUT = 10
+    DISCOVERY_TIMEOUT_S =           10
+    DISCOVERY_TIMEOUT_RAND_FACTOR = 0.25
 
-    TRANSITIONS = [
+    def __init__(
+        self,
+        endpoints,
+        client,
+        server=None,
+        discovery_timeout=DISCOVERY_TIMEOUT_S,
+        randomize_timeout=True):
+        """Create a network manager"""
+        self.__logger = logging.getLogger('network_manager')
+
+        if randomize_timeout:
+            self.discovery_timeout = random.randint(
+                int(discovery_timeout * NetworkManager.DISCOVERY_TIMEOUT_RAND_FACTOR),
+                int(discovery_timeout * (1 + NetworkManager.DISCOVERY_TIMEOUT_RAND_FACTOR)))
+        else:
+            self.discovery_timeout = discovery_timeout
+
+        self.__STATES = [
+            { 'name': 'initializing',
+                'on_enter':     '_stop' },
+            { 'name': 'searching',
+                'timeout':      self.discovery_timeout,
+                'on_timeout':   '_start_server',
+                'on_enter':     '_start_client' },
+            { 'name': 'connected' },
+        ]
+
+        self.__TRANSITIONS = [
             { 'trigger': 'search',          'source': 'initializing',   'dest': 'searching' },
             { 'trigger': 'connected',       'source': 'searching',     'dest': 'connected' },
             { 'trigger': 'disconnected',    'source': 'connected',      'dest': 'searching' },
             { 'trigger': 'shutdown',        'source': '*',              'dest': 'initializing' }
         ]
 
-    STATES = [
-            { 'name': 'initializing',
-                'on_enter':     '_stop' },
-            { 'name': 'searching',
-                'timeout':      DISCOVERY_TIMEOUT,
-                'on_timeout':   '_start_server',
-                'on_enter':     '_start_client' },
-            { 'name': 'connected' },
-        ]
-
-    def __init__(self, client, server=None):
-        """Create a network manager"""
-        self.__logger = logging.getLogger('network_manager')
-
         Machine.__init__(
             self,
-            states=NetworkManager.STATES,
-            transitions=NetworkManager.TRANSITIONS,
+            states=self.__STATES,
+            transitions=self.__TRANSITIONS,
             initial='initializing',
             auto_transitions=False)
 
@@ -60,12 +72,18 @@ class NetworkManager(Machine):
 
         self.__role = 'client'
 
-    def send(self, data):
+        self.__endpoints = endpoints
+
+    def send(self, data, length):
+        if self.state is not 'connected':
+            raise SystemError('System must be connected to send data')
+
         self.__logger.debug('Sending data')
 
-        self.__roles[self.__role].send(data)
+        self.__get_role().send(data, length)
 
     def _stop(self):
+        # Stop all roles
         for role in self.__roles:
             role_to_stop = self.__roles[role]
 
@@ -81,16 +99,28 @@ class NetworkManager(Machine):
         else:
             raise RuntimeError('No server to start')
 
+    def __get_role(self, role=None):
+        if role is None:
+            role = self.__role
+
+        return self.__roles[role]
+
     def __start_role(self, new_role):
-        if new_role.lower() not in self.__roles:
-            raise AttributeError('Unable to start role: ' + new_role)
+        """Start a given role"""
 
-        curr_role = self.__roles[self.__role]
+        # Start by stopping all roles, this might be too much if a node can
+        # have dual roles
+        self._stop()
 
-        if curr_role.is_running():
-            curr_role.stop()
-
+        # Set the new role
         self.__role = new_role
 
-        self.__roles[self.__role].start(self.connected, self.disconnected)
+        # Start the new role
+        self.__get_role().start(self.connected, self.disconnected, self.__data_rx)
+
+    def __data_rx(self, data, length):
+        """
+        """
+        for endpoint in self.__endpoints:
+            endpoint(data, length)
 
