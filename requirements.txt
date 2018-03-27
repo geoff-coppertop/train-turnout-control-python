@@ -1,6 +1,7 @@
 codecov==2.0.15
 PCA9685-driver==1.2.0; sys_platform == 'linux'
 pytest==3.4.0
+pytest-asyncio==0.8.0
 pytest-cov==2.5.1
 pytest-html==1.16.1
 pytest-mock==1.7.1
