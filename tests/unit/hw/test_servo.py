@@ -11,7 +11,7 @@
 import logging
 import pytest
 
-from tests.hw.pwm.fake_pwm_provider import FakePWMProvider
+from tests.unit.hw.pwm.fake_pwm_provider import FakePWMProvider
 from src.hw.servo import Servo
 
 #-------------------------------------------------------------------------------

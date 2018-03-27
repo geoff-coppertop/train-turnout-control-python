@@ -13,8 +13,8 @@ import pytest
 
 from src.hw.turnout_efrog_servo import TurnoutEFrogServo
 
-from tests.hw.fake_servo import FakeServo
-from tests.hw.fake_gpo_provider import FakeGPOProvider
+from tests.unit.hw.fake_servo import FakeServo
+from tests.unit.hw.fake_gpo_provider import FakeGPOProvider
 
 #-------------------------------------------------------------------------------
 # Test constants

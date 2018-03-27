@@ -14,8 +14,8 @@ import time
 
 from src.app.net.network_manager import NetworkManager
 
-from tests.app.net.fake_client import FakeClient
-from tests.app.net.fake_server import FakeServer
+from tests.unit.app.net.fake_client import FakeClient
+from tests.unit.app.net.fake_server import FakeServer
 
 #-------------------------------------------------------------------------------
 # Test fixtures
